@@ -1,4 +1,5 @@
-import typing
+from __future__ import annotations
+from typing import Type, TypeVar
 import random
 
 # Delete below after testing
@@ -6,6 +7,12 @@ import random
 
 
 class Genome:
+
+    # probability that one bit of a gene will be changed
+    mutation_prob = 0.001
+
+    # number of ints in a gene (may change)
+    gene_bits = 32
 
     # In order to build the genes properly, this must know
     # how many neurons are in the brain
@@ -16,11 +23,13 @@ class Genome:
 
     # Then, we should use final variables from the Microbe class
 
-    # This init creates the first gen, which has random genes
-    def __init__(self, num_genes, OrganismType):
+    # This init creates the first generation, which has random genes
+    def __init__(self, num_genes: int, organism_type):
 
         self.genome = []
-        nodes = OrganismType.get_brain_structure()
+        self.num_genes = num_genes
+        self.organism_type = organism_type
+        nodes = organism_type.get_brain_structure()
 
         for i in range(num_genes):
             # 1: source type (0 for input, 1 for hidden)
@@ -41,9 +50,30 @@ class Genome:
 
             self.genome.append(gene)
 
-    #def __init__(self, genome1: str, genome2: str):
+    # 50/50 chance of passing on a gene from each parent
+    # Parameters are two Genome objects
+    @classmethod
+    def from_genomes(cls, genome1: Genome, genome2: Genome):
+        new_genome = cls(genome1.num_genes, genome1.organism_type)
 
-    #def __init__(self, genome1: Genome, genome2: Genome):
+        new_genome.num_genes = genome1.num_genes
+        new_genome.organism_type = genome1.organism_type
+
+        #assert() that they are same length and type
+        for i in range(len(genome1.genome)):
+            gene = random.choice([genome1.genome[i], genome2.genome[i]])
+            if random.random() < cls.mutation_prob:
+                gene ^= 1 << random.randint(0, cls.gene_bits - 1)
+            new_genome.genome[i] = gene
+
+        return new_genome
+
+    #def __add__(self, other):
+        #assert() : TODO - assert that they are of the same length and OrganismType
+
+
+    #def __init__(self, genome1: object, genome2: object):
+        #self.__init__(str(genome1), str(genome2))
 
     def __str__(self):
         gene_strings = []

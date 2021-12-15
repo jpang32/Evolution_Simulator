@@ -10,6 +10,10 @@ class Microbe:
         self.genome = Genome(num_genes, Microbe)
         self.color = self._get_color()
 
+    # Overwrite add function to allow for breeding
+    #def __add__(self, other):
+
+
     def _get_color(self):
         hash_val = hash(str(self.genome))
         r = (hash_val & 0xFF0000) >> 16
