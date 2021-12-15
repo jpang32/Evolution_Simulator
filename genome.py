@@ -6,6 +6,27 @@ import random
 # from microbe import Microbe
 
 
+class Error(Exception):
+
+    def __init__(self, message):
+        self.message = message
+        super().__init__(self.message)
+
+
+class IncompatibleOrganisms(Error):
+
+    def __init__(self, message):
+        self.message = message
+        super().__init__(self.message)
+
+
+class IncompatibleGenomeLengths(Error):
+
+    def __init__(self, message):
+        self.message = message
+        super().__init__(self.message)
+
+
 class Genome:
 
     # probability that one bit of a gene will be changed
@@ -54,6 +75,12 @@ class Genome:
     # Parameters are two Genome objects
     @classmethod
     def from_genomes(cls, genome1: Genome, genome2: Genome):
+
+        if type(genome1) != type(genome2):
+            raise IncompatibleOrganisms('Genomes not of the same organism.')
+        if genome1.num_genes != genome2.num_genes:
+            raise IncompatibleGenomeLengths('Genomes not of the same length.')
+
         new_genome = cls(genome1.num_genes, genome1.organism_type)
 
         new_genome.num_genes = genome1.num_genes
@@ -68,12 +95,9 @@ class Genome:
 
         return new_genome
 
-    #def __add__(self, other):
-        #assert() : TODO - assert that they are of the same length and OrganismType
+    def __add__(self, other):
 
-
-    #def __init__(self, genome1: object, genome2: object):
-        #self.__init__(str(genome1), str(genome2))
+        return Genome.from_genomes(self, other)
 
     def __str__(self):
         gene_strings = []

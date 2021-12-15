@@ -20,3 +20,23 @@ print(g2)
 g3 = Genome.from_genomes(g1, g2)
 print(g3)
 
+# Add two Microbes together to create a new one with merged genome
+m1 = Microbe(4)
+m2 = Microbe(4)
+
+print(m1.genome)
+print(m2.genome)
+
+m3 = m1 + m2
+print(m3.genome)
+
+#Add two Genomes together
+g1 = Genome(3, Microbe)
+g2 = Genome(3, Microbe)
+
+print(g1)
+print(g2)
+
+g3 = g1 + g2
+
+print(g3)

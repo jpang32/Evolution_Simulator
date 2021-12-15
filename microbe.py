@@ -10,9 +10,22 @@ class Microbe:
         self.genome = Genome(num_genes, Microbe)
         self.color = self._get_color()
 
-    # Overwrite add function to allow for breeding
-    #def __add__(self, other):
+    @classmethod
+    def from_genome(cls, genome: Genome):
+        m = Microbe(genome.num_genes)
+        # bad practice to initiate the genome then rewrite?
+        m.genome = genome
+        m.color = m._get_color()
 
+        return m
+
+    # Overwrite add function to allow for breeding
+    def __add__(self, other):
+        # assert that genomes are of the same organism type and length
+        g = self.genome + other.genome
+        m = Microbe.from_genome(g)
+
+        return m
 
     def _get_color(self):
         hash_val = hash(str(self.genome))
