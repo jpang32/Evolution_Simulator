@@ -42,10 +42,8 @@ class Genome:
     # This way, if we create new types of organisms with different brains,
     # we won't have to rely on final variables from the brain class
 
-    # Then, we should use final variables from the Microbe class
-
     # This init creates the first generation, which has random genes
-    def __init__(self, num_genes: int, organism_type):
+    def __init__(self, num_genes: int, organism_type: Type[Microbe]):
 
         self.genome = []
         self.num_genes = num_genes

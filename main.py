@@ -1,42 +1,25 @@
+import tkinter as tk
+
 from microbe import Microbe
 from genome import Genome
+from environment import Environment
 
-m = Microbe(3)
+population = 1000
 
-## Test random Genome creation and color generation for Microbe
+root = tk.Tk()
+win_height = 700
+win_width = 700
+c = tk.Canvas(root, height=win_height, width=win_width, bg='white')
 
-print(m.genome)
-print(Microbe.get_brain_structure())
-print(m.color)
+## Draw one Microbe on a Tkinter Canvas
 
-## Test passing down genes from two Microbes. Also add mutation.
+m_list = []
+for i in range(population):
+    m_list.append(Microbe(3))
 
-# Passes down two genes from gene class itself
-g1 = Genome(3, Microbe)
-g2 = Genome(3, Microbe)
-print(g1)
-print(g2)
+env = Environment(root, win_height, win_width, m_list, 10)
 
-g3 = Genome.from_genomes(g1, g2)
-print(g3)
+env.pack()
+env.tick()
+env.mainloop()
 
-# Add two Microbes together to create a new one with merged genome
-m1 = Microbe(4)
-m2 = Microbe(4)
-
-print(m1.genome)
-print(m2.genome)
-
-m3 = m1 + m2
-print(m3.genome)
-
-#Add two Genomes together
-g1 = Genome(3, Microbe)
-g2 = Genome(3, Microbe)
-
-print(g1)
-print(g2)
-
-g3 = g1 + g2
-
-print(g3)
