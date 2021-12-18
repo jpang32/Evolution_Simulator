@@ -1,30 +1,43 @@
+from __future__ import annotations
 import random
 import typing
 import tkinter as tk
 
 from genome import Genome
+from organism import Organism
+
+class Error(Exception):
+
+    def __init__(self, message):
+        self.message = message
+        super().__init__(self.message)
 
 
-class Microbe:
+class IncompatibleGenome(Error):
+
+    def __init__(self, message):
+        self.message = message
+        super().__init__(self.message)
+
+
+class Microbe(Organism):
 
     #root = tk.Tk()
     win_height = 700
     win_width = 700
     #canvas = tk.Canvas(root, bg='white', height=win_height, width=win_width)
     tag = "microbe"
+    num_genes = 4
 
     # May want to later change num_genes to be dependent on organism class
-    def __init__(self, num_genes):
-        self.genome = Genome(num_genes, Microbe)
-        self.color = self._get_color()
-        self.tag = str(id(self))
-        # Do we want to make it so that Microbes cannot occupy the same pixel?
-        self.x = random.randint(0, Microbe.win_width - 1)
-        self.y = random.randint(0, Microbe.win_height - 1)
+    def __init__(self):
+        super().__init__()
 
     @classmethod
     def from_genome(cls, genome: Genome):
-        m = Microbe(genome.num_genes)
+        if genome.num_genes != Microbe.num_genes or genome.organism_type != Microbe:
+            raise IncompatibleGenome("Incompatible Genome for Microbe.")
+        m = Microbe()
         # bad practice to initiate the genome then rewrite?
         m.genome = genome
         m.color = m._get_color()
@@ -49,12 +62,3 @@ class Microbe:
         # In the future, they will use their brain to make a decision
         if self.y > 0:
             self.y -= 1
-
-    def _get_color(self):
-        hash_val = hash(str(self.genome))
-        r = (hash_val & 0xFF0000) >> 16
-        g = (hash_val & 0x00FF00) >> 8
-        b = hash_val & 0x0000FF
-
-        return "#%02x%02x%02x" % (r, g, b)
-
