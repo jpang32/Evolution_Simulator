@@ -43,14 +43,14 @@ class Genome:
     # we won't have to rely on final variables from the brain class
 
     # This init creates the first generation, which has random genes
-    def __init__(self, num_genes: int, organism_type: Type[Microbe]):
+    def __init__(self, organism_type: Type[Microbe]):
 
         self.genome = []
-        self.num_genes = num_genes
+        self.num_genes = organism_type.num_genes
         self.organism_type = organism_type
         nodes = organism_type.get_brain_structure()
 
-        for i in range(num_genes):
+        for i in range(self.num_genes):
             # 1: source type (0 for input, 1 for hidden)
             source_type = random.randint(0, 1)
             bit1 = source_type << 31
@@ -79,12 +79,11 @@ class Genome:
         if genome1.num_genes != genome2.num_genes:
             raise IncompatibleGenomeLengths('Genomes not of the same length.')
 
-        new_genome = cls(genome1.num_genes, genome1.organism_type)
+        new_genome = cls(genome1.organism_type)
 
         new_genome.num_genes = genome1.num_genes
         new_genome.organism_type = genome1.organism_type
 
-        #assert() that they are same length and type
         for i in range(len(genome1.genome)):
             gene = random.choice([genome1.genome[i], genome2.genome[i]])
             if random.random() < cls.mutation_prob:

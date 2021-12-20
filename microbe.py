@@ -6,6 +6,7 @@ import tkinter as tk
 from genome import Genome
 from organism import Organism
 
+
 class Error(Exception):
 
     def __init__(self, message):
@@ -22,10 +23,6 @@ class IncompatibleGenome(Error):
 
 class Microbe(Organism):
 
-    #root = tk.Tk()
-    win_height = 700
-    win_width = 700
-    #canvas = tk.Canvas(root, bg='white', height=win_height, width=win_width)
     tag = "microbe"
     num_genes = 4
 
@@ -40,7 +37,13 @@ class Microbe(Organism):
         m = Microbe()
         # bad practice to initiate the genome then rewrite?
         m.genome = genome
-        m.color = m._get_color()
+
+        # Is there a more convenient way to do this?
+        hash_val = hash(str(genome))
+        r = (hash_val & 0xFF0000) >> 16
+        g = (hash_val & 0x00FF00) >> 8
+        b = hash_val & 0x0000FF
+        m.color = "#%02x%02x%02x" % (r, g, b)
 
         return m
 
@@ -49,6 +52,12 @@ class Microbe(Organism):
     def get_brain_structure():
         return 17, 3, 8
 
+    def move(self):
+        # For now, they will just move upward.
+        # In the future, they will use their brain to make a decision
+        if self.y > 0:
+            self.y -= 1
+
     # Overwrite add function to allow for breeding
     def __add__(self, other):
         # assert that genomes are of the same organism type and length
@@ -56,9 +65,3 @@ class Microbe(Organism):
         m = Microbe.from_genome(g)
 
         return m
-
-    def move(self):
-        # For now, they will just move upward.
-        # In the future, they will use their brain to make a decision
-        if self.y > 0:
-            self.y -= 1
