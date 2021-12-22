@@ -155,6 +155,6 @@ class Brain:
 
         assert y.shape[0] == Brain.num_output_nodes
 
-        return y
+        return y.reshape((4,))
 
 

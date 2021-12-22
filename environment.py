@@ -27,7 +27,5 @@ class Environment(tk.Canvas):
             deltx = organism.x - prev_x
             delty = organism.y - prev_y
             organism.brain.think()
-            end = time.time()
-            print(end - start)
             self.move(organism.tag, deltx, delty)
         self.after(int(1000 / self.frame_rate), self.tick)

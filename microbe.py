@@ -2,6 +2,7 @@ from __future__ import annotations
 import random
 import typing
 import tkinter as tk
+import numpy as np
 
 from genome import Genome
 from organism import Organism
@@ -62,10 +63,29 @@ class Microbe(Organism):
         # In the future, they will use their brain to make a decision
 
         # Must update direction
-        if self.y > 0:
-            self.y -= 1
-            self.direction = Direction.UP
+        outputs = self.brain.think()
+
+        out = np.argmax(outputs)
+
+        if out == Direction.UP.value:
+            self.direction = out
             self.lasty = -1
+            self.y -= 1
+        elif out == Direction.DOWN.value:
+            self.lasty = 1
+            self.direction = out
+            self.y += 1
+        elif out == Direction.RIGHT.value:
+            self.lastx += 1
+            self.direction = out
+            self.x += 1
+        elif out == Direction.LEFT.value:
+            self.lastx -= 1
+            self.direction = out
+            self.x -= 1
+
+        self.x = Organism.clamp(self.x, 0, Organism.width_range - Microbe.width)
+        self.y = Organism.clamp(self.y, 0, Organism.height_range - Microbe.height)
 
     # Overwrite add function to allow for breeding
     def __add__(self, other):

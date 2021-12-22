@@ -12,10 +12,10 @@ import time
 
 
 class Direction(Enum):
-    UP = 1
-    DOWN = 2
-    RIGHT = 3
-    LEFT = 4
+    UP = 0
+    DOWN = 1
+    RIGHT = 2
+    LEFT = 3
 
 
 class Organism(ABC):
@@ -111,6 +111,11 @@ class Organism(ABC):
                        shape=(Brain.num_output_nodes, 1))
 
         return A.toarray(), B.toarray(), c.toarray()
+
+    # Used for clamping x and y value (Might need to move to Organism class in future)
+    @staticmethod
+    def clamp(n, minn, maxn):
+        return max(min(maxn, n), minn)
 
     @abstractmethod
     def move(self):
