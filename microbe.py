@@ -5,6 +5,7 @@ import tkinter as tk
 
 from genome import Genome
 from organism import Organism
+from organism import Direction
 
 
 class Error(Exception):
@@ -25,6 +26,10 @@ class Microbe(Organism):
 
     tag = "microbe"
     num_genes = 4
+    range = 60
+
+    width = 3
+    height = 3
 
     # May want to later change num_genes to be dependent on organism class
     def __init__(self):
@@ -55,8 +60,12 @@ class Microbe(Organism):
     def move(self):
         # For now, they will just move upward.
         # In the future, they will use their brain to make a decision
+
+        # Must update direction
         if self.y > 0:
             self.y -= 1
+            self.direction = Direction.UP
+            self.lasty = -1
 
     # Overwrite add function to allow for breeding
     def __add__(self, other):

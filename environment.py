@@ -2,6 +2,7 @@ import tkinter as tk
 from typing import List
 from microbe import Microbe
 
+import time
 
 class Environment(tk.Canvas):
 
@@ -9,9 +10,14 @@ class Environment(tk.Canvas):
         super().__init__(root, height=height, width=width, bg="white")
         self.organisms = organisms
         self.frame_rate = frame_rate
+        self.width = width
+        self.height = height
 
         for organism in self.organisms:
-            organism.tag = self.create_rectangle(organism.x, organism.y, organism.x + 3, organism.y + 3, fill=organism.color)
+            organism.tag = self.create_rectangle(organism.x, organism.y,
+                                                 organism.x + type(organism).width,
+                                                 organism.y + type(organism).height,
+                                                 fill=organism.color)
 
     def tick(self):
         for organism in self.organisms:
@@ -20,5 +26,8 @@ class Environment(tk.Canvas):
             organism.move()
             deltx = organism.x - prev_x
             delty = organism.y - prev_y
+            organism.brain.think()
+            end = time.time()
+            print(end - start)
             self.move(organism.tag, deltx, delty)
         self.after(int(1000 / self.frame_rate), self.tick)

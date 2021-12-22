@@ -3,7 +3,7 @@ import tkinter as tk
 from microbe import Microbe
 from genome import Genome
 from environment import Environment
-
+from brain import Brain
 
 population = 1000
 
@@ -13,12 +13,15 @@ win_width = 700
 c = tk.Canvas(root, height=win_height, width=win_width, bg='white')
 
 ## Draw one Microbe on a Tkinter Canvas
+m = Microbe()
 
 m_list = []
+m_list.append(m)
 for i in range(population):
     m_list.append(Microbe())
 
 env = Environment(root, win_height, win_width, m_list, 10)
+Brain.env = env
 
 env.pack()
 env.tick()
