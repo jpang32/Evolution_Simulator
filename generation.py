@@ -5,20 +5,32 @@ import random
 
 class Generation:
 
+    count = 0
+    size = 1000
+
     def __init__(self):
-        self.microbes = []
+        self.members = []
 
     # This needs to be fixed when we figure out how to deal with killing
     # microbes in environment
     @classmethod
-    def from_generation(cls, gen: Generation):
+    def next_gen_from_members_list(cls, members):
         g = Generation()
-        for i in range(len(gen.microbes)):
-            j = random.randint(0, len(gen.microbes) - 1)
-            k = random.randint(0, len(gen.microbes) - 1)
-            g.microbes.append(gen.microbes[j] + gen.microbes[k])
+        g.members = members
+
+        while len(g) < Generation.size:
+            j = random.randint(0, len(members) - 1)
+            k = random.randint(0, len(members) - 1)
+            g.members.append(members[j] + members[k])
+
+        Generation.count += 1
+
         return g
 
-    def add_members(self, size):
-        for i in range(size):
-            self.microbes.append(Microbe())
+    def add_members(self, m_list):
+        self.members = m_list
+
+    def __len__(self):
+        return len(self.members)
+
+    # TODO: Create Iterator?

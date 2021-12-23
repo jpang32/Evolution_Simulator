@@ -6,8 +6,6 @@ import time
 
 class Brain:
 
-    env = None
-
     # Keeping it simply for now:
     # [lx, ly, lastx, lasty, pop_density]
     num_input_nodes = 5
@@ -67,7 +65,7 @@ class Brain:
             roi_width = x2 + x1 + 1
             roi_height = y1 + y2 + 1
 
-            num_neighbors = len(Brain.env.find_enclosed(self.get_lx() - x1,
+            num_neighbors = len(self.organism.env.find_enclosed(self.get_lx() - x1,
                                                         self.get_ly() - y1,
                                                         self.get_lx() + x2,
                                                         self.get_ly() + y2))

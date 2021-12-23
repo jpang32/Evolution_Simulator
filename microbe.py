@@ -25,7 +25,7 @@ class IncompatibleGenome(Error):
 
 class Microbe(Organism):
 
-    tag = "microbe"
+    microbe_tag = "microbe"
     num_genes = 4
     range = 60
 
@@ -35,6 +35,7 @@ class Microbe(Organism):
     # May want to later change num_genes to be dependent on organism class
     def __init__(self):
         super().__init__()
+        self.shape = self.set_canvas_object()
 
     @classmethod
     def from_genome(cls, genome: Genome):
@@ -57,6 +58,13 @@ class Microbe(Organism):
     @staticmethod
     def get_brain_structure():
         return 17, 3, 8
+
+    def set_canvas_object(self):
+        return Organism.env.create_rectangle(self.x, self.y,
+                                             self.x + Microbe.width,
+                                             self.y + Microbe.height,
+                                             fill=self.color,
+                                             tags=self.tag)
 
     def move(self):
         # For now, they will just move upward.

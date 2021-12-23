@@ -20,6 +20,8 @@ class Direction(Enum):
 
 class Organism(ABC):
 
+    env = None
+
     width_range = 700
     height_range = 700
 
@@ -27,8 +29,14 @@ class Organism(ABC):
 
     def __init__(self):
         self.genome = Genome(type(self))
-
+        # Used for brain thinking calculations
         self.A, self.B, self.c = self.__get_genome_matrices()
+        # Hash genome to a color:
+        hash_val = hash(str(self.genome))
+        r = (hash_val & 0xFF0000) >> 16
+        g = (hash_val & 0x00FF00) >> 8
+        b = hash_val & 0x0000FF
+        self.color = "#%02x%02x%02x" % (r, g, b)
 
         self.brain = Brain(self)
 
@@ -38,14 +46,7 @@ class Organism(ABC):
         self.x = random.randint(0, Organism.width_range - 1)
         self.y = random.randint(0, Organism.height_range - 1)
 
-        hash_val = hash(str(self.genome))
-        r = (hash_val & 0xFF0000) >> 16
-        g = (hash_val & 0x00FF00) >> 8
-        b = hash_val & 0x0000FF
-        self.color = "#%02x%02x%02x" % (r, g, b)
-
         self.direction = random.choice(list(Direction)).value
-
         self.lastx = 0
         self.lasty = 0
 
@@ -113,9 +114,17 @@ class Organism(ABC):
         return A.toarray(), B.toarray(), c.toarray()
 
     # Used for clamping x and y value (Might need to move to Organism class in future)
+    def reset(self):
+        self.x = random.randint(0, Organism.width_range - 1)
+        self.y = random.randint(0, Organism.height_range - 1)
+
     @staticmethod
     def clamp(n, minn, maxn):
         return max(min(maxn, n), minn)
+
+    @abstractmethod
+    def set_canvas_object(self):
+        pass
 
     @abstractmethod
     def move(self):

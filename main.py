@@ -1,34 +1,36 @@
 import tkinter as tk
 
+from organism import Organism
 from microbe import Microbe
 from genome import Genome
 from environment import Environment
 from brain import Brain
+from generation import Generation
+
 
 population = 1000
 
 root = tk.Tk()
 win_height = 700
 win_width = 700
-c = tk.Canvas(root, height=win_height, width=win_width, bg='white')
 
-## Draw one Microbe on a Tkinter Canvas
-m = Microbe()
+g0 = Generation()
+env = Environment(root, win_height, win_width, g0, 10)
+Organism.env = env
 
 m_list = []
-m_list.append(m)
 for i in range(population):
     m_list.append(Microbe())
 
-env = Environment(root, win_height, win_width, m_list, 10)
-Brain.env = env
+g0.add_members(m_list)
+
 
 env.pack()
 env.tick()
 env.mainloop()
+
+
 '''
-
-
 from abc import ABC, abstractmethod
 
 
