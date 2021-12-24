@@ -162,7 +162,7 @@ class Brain:
         #y = softmax(y.toarray())
         y = Brain._think(A, B, c, x)
 
-        return y.reshape((Brain.num_output_nodes,))
+        return y
 
     @numba.jit(nopython=True)
     def _think(A, B, c, x):
@@ -184,5 +184,5 @@ class Brain:
         # y = B.dot(A.dot(x).tanh()) + c
         # y = softmax(y.toarray())
 
-        return e_y
+        return list(e_y)
 

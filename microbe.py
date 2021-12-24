@@ -77,7 +77,8 @@ class Microbe(Organism):
             # Avg time: 1e-04 (sometimes 8e-05)
             outputs = self.brain.think()
             # Avg time: about the same as think, a little bit less
-            out = np.random.choice(list(Direction), 1, p=outputs)[0].value
+            #out = np.random.choice(list(Direction), 1, p=outputs)[0].value
+            out = random.choices(list(Direction), weights=outputs, k=1)[0].value
         else:
             out = direction
 

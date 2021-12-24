@@ -31,14 +31,6 @@ class Organism(ABC):
 
     def __init__(self):
         self.genome = Genome(type(self))
-        # Used for brain thinking calculations
-        self.A, self.B, self.c = self.__get_genome_matrices()
-        # Hash genome to a color:
-        hash_val = hash(str(self.genome))
-        r = (hash_val & 0xFF0000) >> 16
-        g = (hash_val & 0x00FF00) >> 8
-        b = hash_val & 0x0000FF
-        self.color = "#%02x%02x%02x" % (r, g, b)
 
         self.brain = Brain(self)
 
@@ -51,6 +43,23 @@ class Organism(ABC):
         self.direction = random.choice(list(Direction)).value
         self.lastx = 0
         self.lasty = 0
+
+    @property
+    def genome(self):
+        return self._genome
+
+    @genome.setter
+    def genome(self, g: Genome):
+        self._genome = g
+        self.A, self.B, self.c = self.__get_genome_matrices()
+        self.color = "#%02x%02x%02x" % self.__get_color()
+
+    def __get_color(self):
+        hash_val = hash(str(self.genome))
+        r = (hash_val & 0xFF0000) >> 16
+        g = (hash_val & 0x00FF00) >> 8
+        b = hash_val & 0x0000FF
+        return r, g, b
 
     def __get_genome_matrices(self):
 
@@ -66,7 +75,7 @@ class Organism(ABC):
         cols_c = []
         data_c = []  # Input to output weight values
 
-        for gene in self.genome.genome:
+        for gene in self._genome.genome:
 
             source_type = (gene & (1 << 31)) >> 31
             source_id = (gene & (int('1111111', 2) << 24)) >> 24
@@ -113,8 +122,7 @@ class Organism(ABC):
         c = csr_matrix((data_c, (rows_c, cols_c)),
                        shape=(Brain.num_output_nodes, 1), dtype='f4')
 
-        return A.toarray(), B.toarray(), c.toarray()#.reshape((Brain.num_output_nodes,))
-        #return A, B, c
+        return A.toarray(), B.toarray(), c.toarray()
 
     # Used for clamping x and y value (Might need to move to Organism class in future)
     def reset(self):
