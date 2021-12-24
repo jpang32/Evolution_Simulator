@@ -4,6 +4,11 @@ from scipy.sparse import csr_matrix
 import time
 from scipy.special import softmax
 
+from numba import int32, float32    # import the types
+from numba.experimental import jitclass
+import numba
+
+
 class Brain:
 
     # Keeping it simply for now:
@@ -143,18 +148,41 @@ class Brain:
         # B[k, i] takes weight value from hidden node i to output node k
         # c[k] takes weight from input nodes to output node k
 
-        x = np.array(self.sensory.get_data(), dtype='d').reshape(self.num_input_nodes, 1)
-
-        #print('Inputs: ', x)
+        x = np.array(self.sensory.get_data(), dtype='f4').reshape(self.num_input_nodes, 1)
+        #x = self.sensory.get_data()
+        #x = csr_matrix(self.sensory.get_data(), dtype='f4').T
 
         A = self.organism.A
         B = self.organism.B
         c = self.organism.c
 
-        y = softmax(np.matmul(B, np.tanh(np.matmul(A, x))) + c)
-
-        assert y.shape[0] == Brain.num_output_nodes
+        #print(np.matmul(B, np.tanh(np.matmul(A, x, dtype='f4')), dtype='f4').shape)
+        #y = softmax(np.matmul(B, np.tanh(np.matmul(A, x, dtype='f4')), dtype='f4') + c)
+        #y = B.dot(A.dot(x).tanh()) + c
+        #y = softmax(y.toarray())
+        y = Brain._think(A, B, c, x)
 
         return y.reshape((Brain.num_output_nodes,))
 
+    @numba.jit(nopython=True)
+    def _think(A, B, c, x):
+
+        # Equation: B(Ax + d) + c = y
+        # where x is input node vector
+        # A[i, j] takes weight value from input node j to hidden node i
+        # d[l] takes weight value from input (TODO: Ignoring this for now)
+        # B[k, i] takes weight value from hidden node i to output node k
+        # c[k] takes weight from input nodes to output node k
+
+        # print(np.matmul(B, np.tanh(np.matmul(A, x, dtype='f4')), dtype='f4').shape)
+        #y = np.matmul(B, np.tanh(np.matmul(A, x, dtype='f4')), dtype='f4') + c
+        y = B @ A @ x + c
+
+        e_y = np.exp(y - np.max(y))
+
+        e_y = e_y / e_y.sum(axis=0)
+        # y = B.dot(A.dot(x).tanh()) + c
+        # y = softmax(y.toarray())
+
+        return e_y
 

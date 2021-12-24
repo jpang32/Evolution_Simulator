@@ -9,6 +9,8 @@ from genome import Genome
 from organism import Organism
 from organism import Direction
 
+import time
+
 
 class Error(Exception):
 
@@ -72,15 +74,14 @@ class Microbe(Organism):
 
         # Must update direction
         if direction is None:
+            # Avg time: 1e-04 (sometimes 8e-05)
             outputs = self.brain.think()
-            #outputs[outputs < 0] = 0
-            #outputs = softmax(outputs)
-            #print(outputs)
+            # Avg time: about the same as think, a little bit less
             out = np.random.choice(list(Direction), 1, p=outputs)[0].value
-            #out = np.argmax(outputs)
         else:
             out = direction
 
+        # Avg time for the rest of the function: 4.05e-06
         if out == Direction.UP.value:
             self.direction = out
             self.lasty = -1
@@ -99,7 +100,6 @@ class Microbe(Organism):
             self.x -= 1
         elif out == Direction.RANDOM.value:
             self.move(direction=random.choice(list(Direction)[0:4]).value)
-
 
         self.x = Organism.clamp(self.x, 0, Organism.width_range - Microbe.width)
         self.y = Organism.clamp(self.y, 0, Organism.height_range - Microbe.height)

@@ -107,13 +107,14 @@ class Organism(ABC):
                 continue  # Ignoring interconnected hidden nodes for now
 
         A = csr_matrix((data_A, (rows_A, cols_A)),
-                       shape=(Brain.num_hidden_nodes, Brain.num_input_nodes))
+                       shape=(Brain.num_hidden_nodes, Brain.num_input_nodes), dtype='f4')
         B = csr_matrix((data_B, (rows_B, cols_B)),
-                       shape=(Brain.num_output_nodes, Brain.num_hidden_nodes))
+                       shape=(Brain.num_output_nodes, Brain.num_hidden_nodes), dtype='f4')
         c = csr_matrix((data_c, (rows_c, cols_c)),
-                       shape=(Brain.num_output_nodes, 1))
+                       shape=(Brain.num_output_nodes, 1), dtype='f4')
 
-        return A.toarray(), B.toarray(), c.toarray()
+        return A.toarray(), B.toarray(), c.toarray()#.reshape((Brain.num_output_nodes,))
+        #return A, B, c
 
     # Used for clamping x and y value (Might need to move to Organism class in future)
     def reset(self):
