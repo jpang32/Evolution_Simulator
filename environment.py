@@ -38,7 +38,6 @@ class Environment(tk.Canvas):
         if Environment.duration <= Environment.ticks:
             print('Generation length: ', Environment.timer)
             Environment.timer = 0
-            # Takes 22 to 23 seconds for a generation to complete
             self.transition()
             Environment.ticks = 0
         self.move_organisms()
@@ -52,14 +51,9 @@ class Environment(tk.Canvas):
         for organism in self.generation.members:
             prev_x = organism.x
             prev_y = organism.y
-            # Avg move time for all organisms in one tick: 1.45e-04
-            # Assuming 300 ticks / gen: 0.0435s
-            # Of 22 to 23 seconds it takes for each gen, about 21 to 22 of those are for moving all of the organisms
             organism.move()
             deltx = organism.x - prev_x
             delty = organism.y - prev_y
-            # Avg move time for all organisms in one tick: 6e-06
-            # Assuming 300 ticks / gen: 1.8e-03s
             self.move(organism.shape, deltx, delty)
 
     # transition to next generation

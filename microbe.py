@@ -69,16 +69,11 @@ class Microbe(Organism):
                                              fill=self.color)
 
     def move(self, direction=None):
-        # For now, they will just move upward.
-        # In the future, they will use their brain to make a decision
 
         # Must update direction
         if direction is None:
-            # Avg time: 1e-04 (sometimes 8e-05)
             outputs = self.brain.think()
-            # Avg time: about the same as think, a little bit less
-            #out = np.random.choice(list(Direction), 1, p=outputs)[0].value
-            out = random.choices(list(Direction), weights=outputs, k=1)[0].value
+            out = random.choices(list(Direction), weights=outputs, k=1)[0].valL
         else:
             out = direction
 
