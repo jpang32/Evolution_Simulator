@@ -3,6 +3,7 @@ import random
 import typing
 import tkinter as tk
 import numpy as np
+from scipy.special import softmax
 
 from genome import Genome
 from organism import Organism
@@ -63,17 +64,22 @@ class Microbe(Organism):
         return Organism.env.create_rectangle(self.x, self.y,
                                              self.x + Microbe.width,
                                              self.y + Microbe.height,
-                                             fill=self.color,
-                                             tags=self.tag)
+                                             fill=self.color)
 
-    def move(self):
+    def move(self, direction=None):
         # For now, they will just move upward.
         # In the future, they will use their brain to make a decision
 
         # Must update direction
-        outputs = self.brain.think()
-
-        out = np.argmax(outputs)
+        if direction is None:
+            outputs = self.brain.think()
+            #outputs[outputs < 0] = 0
+            #outputs = softmax(outputs)
+            #print(outputs)
+            out = np.random.choice(list(Direction), 1, p=outputs)[0].value
+            #out = np.argmax(outputs)
+        else:
+            out = direction
 
         if out == Direction.UP.value:
             self.direction = out
@@ -91,6 +97,9 @@ class Microbe(Organism):
             self.lastx -= 1
             self.direction = out
             self.x -= 1
+        elif out == Direction.RANDOM.value:
+            self.move(direction=random.choice(list(Direction)[0:4]).value)
+
 
         self.x = Organism.clamp(self.x, 0, Organism.width_range - Microbe.width)
         self.y = Organism.clamp(self.y, 0, Organism.height_range - Microbe.height)

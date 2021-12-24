@@ -7,15 +7,33 @@ from environment import Environment
 from brain import Brain
 from generation import Generation
 
+'''
+root = tk.Tk()
+canvas = tk.Canvas(root, height=700, width=700, bg='white')
 
-population = 1000
+a= canvas.create_rectangle(210, 210, 220, 220)
+b = canvas.create_rectangle(220, 220, 230, 230)
+
+canvas.addtag_enclosed('alive',200, 200, 300, 300)
+g = canvas.create_rectangle(250, 250, 260, 260)
+
+print(canvas.gettags(g))
+print(canvas.gettags(a))
+print(canvas.gettags(b))
+
+'''
+start_at_gen = 100
+population = 500
 
 root = tk.Tk()
-win_height = 700
-win_width = 700
+root.title('Evolution Simulator')
+win_height = 350
+win_width = 350
+
+frame_rate = 100
 
 g0 = Generation()
-env = Environment(root, win_height, win_width, g0, 10)
+env = Environment(root, win_height, win_width, g0, frame_rate)
 Organism.env = env
 
 m_list = []

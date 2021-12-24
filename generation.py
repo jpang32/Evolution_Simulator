@@ -6,7 +6,7 @@ import random
 class Generation:
 
     count = 0
-    size = 1000
+    size = 500
 
     def __init__(self):
         self.members = []
@@ -24,6 +24,7 @@ class Generation:
             g.members.append(members[j] + members[k])
 
         Generation.count += 1
+        print('Generation ', Generation.count)
 
         return g
 

@@ -16,14 +16,16 @@ class Direction(Enum):
     DOWN = 1
     RIGHT = 2
     LEFT = 3
+    RANDOM = 4
+    STILL = 5
 
 
 class Organism(ABC):
 
     env = None
 
-    width_range = 700
-    height_range = 700
+    width_range = 350
+    height_range = 350
 
     organism_tag = "organism"
 

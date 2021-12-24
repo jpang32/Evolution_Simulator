@@ -2,16 +2,16 @@ import math
 import numpy as np
 from scipy.sparse import csr_matrix
 import time
-
+from scipy.special import softmax
 
 class Brain:
 
     # Keeping it simply for now:
     # [lx, ly, lastx, lasty, pop_density]
     num_input_nodes = 5
-    num_hidden_nodes = 10
-    # [UP, DOWN, RIGHT, LEFT]
-    num_output_nodes = 4
+    num_hidden_nodes = 4
+    # [UP, DOWN, RIGHT, LEFT, RANDOM, STILL, REVERSE]
+    num_output_nodes = 6
 
     class Sensory:
 
@@ -26,11 +26,11 @@ class Brain:
 
         # World location on x axis
         def get_lx(self):
-            return self.organism.x
+            return self.organism.x / type(self.organism).width_range
 
         # World location on y axis
         def get_ly(self):
-            return self.organism.y
+            return self.organism.y / type(self.organism).height_range
 
         # Last move in x direction (+ for right, - for left, or None for N/A)
         def get_lastx(self):
@@ -145,14 +145,16 @@ class Brain:
 
         x = np.array(self.sensory.get_data(), dtype='d').reshape(self.num_input_nodes, 1)
 
+        #print('Inputs: ', x)
+
         A = self.organism.A
         B = self.organism.B
         c = self.organism.c
 
-        y = np.tanh(np.matmul(B, np.tanh(np.matmul(A, x))) + c)
+        y = softmax(np.matmul(B, np.tanh(np.matmul(A, x))) + c)
 
         assert y.shape[0] == Brain.num_output_nodes
 
-        return y.reshape((4,))
+        return y.reshape((Brain.num_output_nodes,))
 
 
