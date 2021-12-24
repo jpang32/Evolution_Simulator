@@ -73,7 +73,7 @@ class Microbe(Organism):
         # Must update direction
         if direction is None:
             outputs = self.brain.think()
-            out = random.choices(list(Direction), weights=outputs, k=1)[0].valL
+            out = random.choices(list(Direction), weights=outputs, k=1)[0].value
         else:
             out = direction
 

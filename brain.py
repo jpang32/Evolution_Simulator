@@ -149,17 +149,11 @@ class Brain:
         # c[k] takes weight from input nodes to output node k
 
         x = np.array(self.sensory.get_data(), dtype='f4').reshape(self.num_input_nodes, 1)
-        #x = self.sensory.get_data()
-        #x = csr_matrix(self.sensory.get_data(), dtype='f4').T
 
         A = self.organism.A
         B = self.organism.B
         c = self.organism.c
 
-        #print(np.matmul(B, np.tanh(np.matmul(A, x, dtype='f4')), dtype='f4').shape)
-        #y = softmax(np.matmul(B, np.tanh(np.matmul(A, x, dtype='f4')), dtype='f4') + c)
-        #y = B.dot(A.dot(x).tanh()) + c
-        #y = softmax(y.toarray())
         y = Brain._think(A, B, c, x)
 
         return y
@@ -174,15 +168,11 @@ class Brain:
         # B[k, i] takes weight value from hidden node i to output node k
         # c[k] takes weight from input nodes to output node k
 
-        # print(np.matmul(B, np.tanh(np.matmul(A, x, dtype='f4')), dtype='f4').shape)
-        #y = np.matmul(B, np.tanh(np.matmul(A, x, dtype='f4')), dtype='f4') + c
         y = B @ A @ x + c
 
         e_y = np.exp(y - np.max(y))
 
         e_y = e_y / e_y.sum(axis=0)
-        # y = B.dot(A.dot(x).tanh()) + c
-        # y = softmax(y.toarray())
 
         return list(e_y)
 
