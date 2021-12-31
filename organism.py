@@ -24,9 +24,8 @@ class Direction(Enum):
 class Organism(ABC):
 
     env = None
-
-    width_range = 400
-    height_range = 400
+    width_range = None
+    height_range = None
 
     organism_tag = "organism"
 
@@ -45,7 +44,7 @@ class Organism(ABC):
         self.lastx = 0
         self.lasty = 0
 
-        self._shape = 0
+        self._shape = None
 
 
     @property
@@ -188,7 +187,7 @@ class Organism(ABC):
         pass
 
     @abstractmethod
-    def set_canvas_object(self):
+    def set_canvas_object(self, env):
         pass
 
     @abstractmethod

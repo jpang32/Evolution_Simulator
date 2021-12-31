@@ -38,7 +38,6 @@ class Microbe(Organism):
     # May want to later change num_genes to be dependent on organism class
     def __init__(self):
         super().__init__()
-        self.shape = self.set_canvas_object()
 
     @classmethod
     def from_genome(cls, genome: Genome):
@@ -59,11 +58,11 @@ class Microbe(Organism):
         self.x = random.randint(0, Organism.width_range - 1)
         self.y = random.randint(0, Organism.height_range - 1)
 
-    def set_canvas_object(self):
-        return Organism.env.create_rectangle(self.x, self.y,
-                                             self.x + Microbe.width,
-                                             self.y + Microbe.height,
-                                             fill=self.color)
+    def set_canvas_object(self, env):
+        return env.create_rectangle(self.x, self.y,
+                                    self.x + Microbe.width,
+                                    self.y + Microbe.height,
+                                    fill=self.color)
 
     def move(self, direction=None):
 

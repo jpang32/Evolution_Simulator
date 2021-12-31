@@ -1,7 +1,9 @@
+from __future__ import annotations
 import tkinter as tk
 from typing import List
-from microbe import Microbe
-from generation import Generation
+from organism import Organism
+#from generation import Generation
+import random
 
 
 import time
@@ -9,21 +11,61 @@ import time
 
 class Environment(tk.Canvas):
 
-    duration = 300 # Number of ticks before next gen
-    ticks = 0 # Current number of ticks
+    class Generation:
+
+        count = 0
+        size = 500
+
+        def __init__(self, env):
+            self.env = env
+            self.members = []
+
+        # This needs to be fixed when we figure out how to deal with killing
+        # microbes in environment
+        @classmethod
+        def next_gen_from_members_list(cls, members, env):
+            g = cls(env)
+            g.members = members
+
+            while len(g) < cls.size:
+                j = random.randint(0, len(members) - 1)
+                k = random.randint(0, len(members) - 1)
+                new_member = members[j] + members[k]
+                new_member.shape = new_member.set_canvas_object(env)
+                g.members.append(new_member)
+
+            cls.count += 1
+            print('Generation ', cls.count)
+
+            return g
+
+        def add_members(self, members):
+            for organism in members:
+                organism.shape = organism.set_canvas_object(self.env)
+            self.members = members
+
+        def __len__(self):
+            return len(self.members)
+
+        # TODO: Create Iterator?
+
+    duration = 300  # Number of ticks before next gen
+    ticks = 0  # Current number of ticks
 
     # temp:
     timer = 0
 
-    safe_x = [200, 401] # [x1, x2] safe area
-    safe_y = [0, 401] # [y1, y2] safe area
+    safe_x = [200, 401]  # [x1, x2] safe area
+    safe_y = [0, 401]  # [y1, y2] safe area
 
     def __init__(self, root, height, width, frame_rate):
         super().__init__(root, height=height, width=width, bg="white")
+        Organism.width_range = width
+        Organism.height_range = height
         self.safe_area = self.create_rectangle(self.safe_x[0], self.safe_y[0],
                                                self.safe_x[1], self.safe_y[1],
                                                fill='#FFE5CC', outline='white')
-        self.generation = Generation()
+        self.generation = self.Generation(self)
         self.frame_rate = frame_rate
         self.width = width
         self.height = height
@@ -81,6 +123,6 @@ class Environment(tk.Canvas):
             organism.reset()
             self.move(organism.shape, organism.x - prev_x, organism.y - prev_y)
         self.dtag('alive', 'alive')
-        self.generation = Generation.next_gen_from_members_list(survivors)
+        self.generation = self.Generation.next_gen_from_members_list(survivors, self)
 
 

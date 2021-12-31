@@ -21,7 +21,9 @@ class Generation:
         while len(g) < Generation.size:
             j = random.randint(0, len(members) - 1)
             k = random.randint(0, len(members) - 1)
-            g.members.append(members[j] + members[k])
+            new_member = members[j] + members[k]
+            # TODO: Add member to environment
+            g.members.append(new_member)
 
         Generation.count += 1
         print('Generation ', Generation.count)
