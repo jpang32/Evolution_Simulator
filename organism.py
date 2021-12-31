@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import random
 from enum import Enum
+import math
 
 from genome import Genome
 from brain import Brain
@@ -24,8 +25,8 @@ class Organism(ABC):
 
     env = None
 
-    width_range = 350
-    height_range = 350
+    width_range = 400
+    height_range = 400
 
     organism_tag = "organism"
 
@@ -44,6 +45,16 @@ class Organism(ABC):
         self.lastx = 0
         self.lasty = 0
 
+        self._shape = 0
+
+    @property
+    def shape(self):
+        return self._shape
+
+    @shape.setter
+    def shape(self, shape):
+        self._shape = shape
+
     @property
     def genome(self):
         return self._genome
@@ -55,11 +66,43 @@ class Organism(ABC):
         self.color = "#%02x%02x%02x" % self.__get_color()
 
     def __get_color(self):
-        hash_val = hash(str(self.genome))
-        r = (hash_val & 0xFF0000) >> 16
-        g = (hash_val & 0x00FF00) >> 8
-        b = hash_val & 0x0000FF
-        return r, g, b
+        r = 0
+        g = 0
+        b = 0
+
+        for gene in self._genome.genome:
+            hash_val = hash(gene)
+            r += ((hash_val & 0xFF0000) >> 16)
+            g += ((hash_val & 0x00FF00) >> 8)
+            b += (hash_val & 0x0000FF)
+
+        m = int('11111111', 2)
+        n = len(self.genome)
+
+        avg = m * n / 2
+        std = math.sqrt(n * m * m / 12)
+
+        r -= avg
+        g -= avg
+        b -= avg
+
+        r /= std
+        g /= std
+        b /= std
+
+        r = math.erf(r)
+        g = math.erf(g)
+        b = math.erf(b)
+
+        r += 1
+        g += 1
+        b += 1
+
+        r *= 255 / 2
+        g *= 255 / 2
+        b *= 255 / 2
+
+        return int(r), int(g), int(b)
 
     def __get_genome_matrices(self):
 

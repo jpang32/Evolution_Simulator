@@ -55,12 +55,14 @@ class Genome:
             source_type = random.randint(0, 1)
             bit1 = source_type << 31
             # 2 -> 8: ID of source neuron
-            bit28 = random.randint(0, 127) % (nodes[1] if source_type else nodes[0]) << 24
+            bit28 = random.randint(0, 127) << 24
+            # % (nodes[1] if source_type else nodes[0])
             # 9: sink type (1 for hidden, 0 for output)
             sink_type = random.randint(0, 1)
             bit9 = sink_type << 23
             # 10 -> 16: ID of sink neuron
-            bit1016 = random.randint(0, 127) % (nodes[1] if sink_type else nodes[2]) << 16
+            bit1016 = random.randint(0, 127) << 16
+            # % (nodes[1] if sink_type else nodes[2])
             # 17 -> 32: weight value (divided by a number between 8000 and 10000 for 'normalization')
             bit1732 = random.randint(0, 65535)
 
@@ -103,5 +105,8 @@ class Genome:
             gene_strings.append(format(gene, '08x'))
 
         return " ".join(gene_strings)
+
+    def __len__(self):
+        return len(self.genome)
 
 

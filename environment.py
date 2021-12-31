@@ -3,12 +3,8 @@ from typing import List
 from microbe import Microbe
 from generation import Generation
 
-#from numba import int32, float32    # import the types
-#from numba.experimental import jitclass
-
 
 import time
-import numba
 
 
 class Environment(tk.Canvas):
@@ -19,18 +15,21 @@ class Environment(tk.Canvas):
     # temp:
     timer = 0
 
-    safe_x = [175, 351] # [x1, x2] safe area
-    safe_y = [0, 351] # [y1, y2] safe area
+    safe_x = [200, 401] # [x1, x2] safe area
+    safe_y = [0, 401] # [y1, y2] safe area
 
-    def __init__(self, root, height, width, generation: Generation, frame_rate):
+    def __init__(self, root, height, width, frame_rate):
         super().__init__(root, height=height, width=width, bg="white")
         self.safe_area = self.create_rectangle(self.safe_x[0], self.safe_y[0],
                                                self.safe_x[1], self.safe_y[1],
                                                fill='#FFE5CC', outline='white')
-        self.generation = generation
+        self.generation = Generation()
         self.frame_rate = frame_rate
         self.width = width
         self.height = height
+
+    def add_members(self, members):
+        self.generation.add_members(members)
 
     def tick(self):
         start = time.time()
