@@ -47,6 +47,16 @@ class Organism(ABC):
 
         self._shape = 0
 
+
+    @property
+    def x(self):
+        return self._x
+
+    @x.setter
+    def x(self, x):
+        self._x = x
+
+
     @property
     def shape(self):
         return self._shape
@@ -54,6 +64,7 @@ class Organism(ABC):
     @shape.setter
     def shape(self, shape):
         self._shape = shape
+
 
     @property
     def genome(self):
@@ -167,14 +178,14 @@ class Organism(ABC):
 
         return A.toarray(), B.toarray(), c.toarray()
 
-    # Used for clamping x and y value (Might need to move to Organism class in future)
-    def reset(self):
-        self.x = random.randint(0, Organism.width_range - 1)
-        self.y = random.randint(0, Organism.height_range - 1)
-
+    # Used for clamping x and y value
     @staticmethod
     def clamp(n, minn, maxn):
         return max(min(maxn, n), minn)
+
+    @abstractmethod
+    def reset(self):
+        pass
 
     @abstractmethod
     def set_canvas_object(self):

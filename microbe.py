@@ -55,6 +55,10 @@ class Microbe(Organism):
     def get_brain_structure():
         return 17, 3, 8
 
+    def reset(self):
+        self.x = random.randint(0, Organism.width_range - 1)
+        self.y = random.randint(0, Organism.height_range - 1)
+
     def set_canvas_object(self):
         return Organism.env.create_rectangle(self.x, self.y,
                                              self.x + Microbe.width,
