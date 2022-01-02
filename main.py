@@ -9,7 +9,7 @@ from generation import Generation
 
 
 start_at_gen = 100
-population = 500
+num_members = 500
 
 root = tk.Tk()
 root.title('Evolution Simulator')
@@ -19,11 +19,11 @@ win_width = 400
 
 frame_rate = 100
 
-env = Environment(root, win_height, win_width, frame_rate)
+env = Environment(root, win_height, win_width, frame_rate, num_members=num_members)
 Organism.env = env
 
 m_list = []
-for i in range(population):
+for i in range(num_members):
     m_list.append(Microbe())
 
 env.add_members(m_list)

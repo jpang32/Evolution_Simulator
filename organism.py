@@ -191,5 +191,5 @@ class Organism(ABC):
         pass
 
     @abstractmethod
-    def move(self):
+    def move(self, env_data):
         pass

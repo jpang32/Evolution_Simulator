@@ -58,7 +58,7 @@ class Environment(tk.Canvas):
     safe_x = [200, 401]  # [x1, x2] safe area
     safe_y = [0, 401]  # [y1, y2] safe area
 
-    def __init__(self, root, height, width, frame_rate):
+    def __init__(self, root, height, width, frame_rate, num_members=500):
         super().__init__(root, height=height, width=width, bg="white")
         Organism.width_range = width
         Organism.height_range = height
@@ -72,6 +72,39 @@ class Environment(tk.Canvas):
 
     def add_members(self, members):
         self.generation.add_members(members)
+
+    """BELOW: Environment sensory functions for giving info to Organisms"""
+
+    def get_pop_density(self, org_x, org_y, org_range, x1=None, y1=None, x2=None, y2=None):
+        if x1 is None and x2 is not None:
+            raise Exception('x1 undefined')
+        if y1 is None and y2 is not None:
+            raise Exception('y1 undefined')
+
+        if x2 is None:
+            x2 = x1
+        if y2 is None:
+            y2 = y1
+
+        if x1 is None:
+            x1 = x2 = org_range
+        if y1 is None:
+            y1 = y2 = org_range
+
+        roi_width = x2 + x1 + 1
+        roi_height = y1 + y2 + 1
+
+        num_neighbors = len(self.find_enclosed(org_x - x1,
+                                               org_y - y1,
+                                               org_x + x2,
+                                               org_y + y2))
+
+        # TODO: Cut the region so that it doesn't include space off of the canvas
+
+        # Will probably give a very low number - may want to weight it differently in the future
+        return num_neighbors / (roi_width * roi_height)
+
+    """ABOVE: Environment sensory functions for giving info to Organisms"""
 
     def tick(self):
         start = time.time()
@@ -90,9 +123,13 @@ class Environment(tk.Canvas):
 
     def move_organisms(self):
         for organism in self.generation.members:
+            # Calculate env data for the organism to think
+            pop_density = self.get_pop_density(organism.x, organism.y, type(organism).range)
+            env_data = [pop_density]
+
             prev_x = organism.x
             prev_y = organism.y
-            organism.move()
+            organism.move(env_data)
             deltx = organism.x - prev_x
             delty = organism.y - prev_y
             self.move(organism.shape, deltx, delty)

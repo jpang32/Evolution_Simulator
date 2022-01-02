@@ -64,11 +64,11 @@ class Microbe(Organism):
                                     self.y + Microbe.height,
                                     fill=self.color)
 
-    def move(self, direction=None):
+    def move(self, env_data, direction=None):
 
         # Must update direction
         if direction is None:
-            outputs = self.brain.think()
+            outputs = self.brain.think(env_data)
             out = random.choices(list(Direction), weights=outputs, k=1)[0].value
         else:
             out = direction
@@ -91,7 +91,7 @@ class Microbe(Organism):
             self.direction = out
             self.x -= 1
         elif out == Direction.RANDOM.value:
-            self.move(direction=random.choice(list(Direction)[0:4]).value)
+            self.move(env_data, direction=random.choice(list(Direction)[0:4]).value)
 
         self.x = Organism.clamp(self.x, 0, Organism.width_range - Microbe.width)
         self.y = Organism.clamp(self.y, 0, Organism.height_range - Microbe.height)

@@ -11,7 +11,7 @@ import numba
 
 class Brain:
 
-    # Keeping it simply for now:
+    # Keeping it simple for now:
     # [lx, ly, lastx, lasty, pop_density]
     num_input_nodes = 5
     num_hidden_nodes = 4
@@ -86,8 +86,7 @@ class Brain:
             data = [self.get_lx(),
                     self.get_ly(),
                     self.get_lastx(),
-                    self.get_lasty(),
-                    self.get_pop_density()]
+                    self.get_lasty()]
 
             return data
 
@@ -140,7 +139,7 @@ class Brain:
         self.sensory = self.Sensory(self)
 
     # Can this be sped up?
-    def think(self):
+    def think(self, env_data):
         # Equation: B(Ax + d) + c = y
         # where x is input node vector
         # A[i, j] takes weight value from input node j to hidden node i
@@ -148,7 +147,8 @@ class Brain:
         # B[k, i] takes weight value from hidden node i to output node k
         # c[k] takes weight from input nodes to output node k
 
-        x = np.array(self.sensory.get_data(), dtype='f4').reshape(self.num_input_nodes, 1)
+        sensory_data = self.sensory.get_data() + env_data
+        x = np.array(sensory_data, dtype='f4').reshape(self.num_input_nodes, 1)
 
         A = self.organism.A
         B = self.organism.B
