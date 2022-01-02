@@ -20,7 +20,6 @@ win_width = 400
 frame_rate = 100
 
 env = Environment(root, win_height, win_width, frame_rate, num_members=num_members)
-Organism.env = env
 
 m_list = []
 for i in range(num_members):

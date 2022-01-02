@@ -23,7 +23,6 @@ class Direction(Enum):
 
 class Organism(ABC):
 
-    env = None
     width_range = None
     height_range = None
 

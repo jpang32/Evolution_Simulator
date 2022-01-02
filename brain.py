@@ -49,37 +49,6 @@ class Brain:
         def get_direction(self):
             return self.organism.direction
 
-        # Get population density within rectangle (ie, the "neighborhood")
-        # Width will always be centered, but height may simply start
-        def get_pop_density(self, x1=None, y1=None, x2=None, y2=None):
-            if x1 is None and x2 is not None:
-                raise Exception('x1 undefined')
-            if y1 is None and y2 is not None:
-                raise Exception('y1 undefined')
-
-            if x2 is None:
-                x2 = x1
-            if y2 is None:
-                y2 = y1
-
-            if x1 is None:
-                x1 = x2 = type(self.organism).range
-            if y1 is None:
-                y1 = y2 = type(self.organism).range
-
-            roi_width = x2 + x1 + 1
-            roi_height = y1 + y2 + 1
-
-            num_neighbors = len(self.organism.env.find_enclosed(self.get_lx() - x1,
-                                                        self.get_ly() - y1,
-                                                        self.get_lx() + x2,
-                                                        self.get_ly() + y2))
-
-            # TODO: Cut the region so that it doesn't include space off of the canvas
-
-            # Will probably give a very low number - may want to weight it differently in the future
-            return num_neighbors / (roi_width * roi_height)
-
         # IMPORTANT: Gets sensory data in following order:
         # [lx, ly, lastx, lasty, pop_density]
         def get_data(self):
@@ -89,42 +58,6 @@ class Brain:
                     self.get_lasty()]
 
             return data
-
-        # Returns population densities in (forward, backward, left, right) directions
-        # TODO: May need to be fixed in the future
-        def get_directional_gradients(self):
-            # the width of the ROI
-            roi_thickness = 1 # Makes total thickness 3
-            roi_length = type(self.organism).range
-
-            # [UP, DOWN, RIGHT, LEFT]
-            gradients = []
-
-            # UP
-            x1 = x2 = roi_thickness
-            y1 = roi_length
-            y2 = 0
-            gradients.append(self.get_pop_density(x1, y1, x2, y2))
-
-            # DOWN
-            x1 = x2 = roi_thickness
-            y1 = 0
-            y2 = roi_length
-            gradients.append(self.get_pop_density(x1, y1, x2, y2))
-
-            # RIGHT
-            y1 = y2 = roi_thickness
-            x1 = 0
-            x2 = roi_length
-            gradients.append(self.get_pop_density(x1, y1, x2, y2))
-
-            # LEFT
-            y1 = y2 = roi_thickness
-            x1 = roi_length
-            x2 = 0
-            gradients.append(self.get_pop_density(x1, y1, x2, y2))
-
-            return gradients
 
         '''
         def bdx(self):

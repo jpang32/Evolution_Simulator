@@ -2,7 +2,7 @@ from __future__ import annotations
 import tkinter as tk
 from typing import List
 from organism import Organism
-#from generation import Generation
+# from generation import Generation
 import random
 
 
@@ -75,6 +75,8 @@ class Environment(tk.Canvas):
 
     """BELOW: Environment sensory functions for giving info to Organisms"""
 
+    # Get population density within rectangle (ie, the "neighborhood")
+    # Width will always be centered, but height may simply start at the y value of the Organism
     def get_pop_density(self, org_x, org_y, org_range, x1=None, y1=None, x2=None, y2=None):
         if x1 is None and x2 is not None:
             raise Exception('x1 undefined')
@@ -103,6 +105,42 @@ class Environment(tk.Canvas):
 
         # Will probably give a very low number - may want to weight it differently in the future
         return num_neighbors / (roi_width * roi_height)
+
+    # Returns population densities in (forward, backward, left, right) directions
+    # TODO: May need to be fixed in the future
+    def get_directional_gradients(self, org_x, org_y, org_range):
+        # the width of the ROI
+        roi_thickness = 1  # Makes total thickness 3
+        roi_length = org_range
+
+        # [UP, DOWN, RIGHT, LEFT]
+        gradients = []
+
+        # UP
+        x1 = x2 = roi_thickness
+        y1 = roi_length
+        y2 = 0
+        gradients.append(self.get_pop_density(org_x, org_y, org_range, x1, y1, x2, y2))
+
+        # DOWN
+        x1 = x2 = roi_thickness
+        y1 = 0
+        y2 = roi_length
+        gradients.append(self.get_pop_density(org_x, org_y, org_range, x1, y1, x2, y2))
+
+        # RIGHT
+        y1 = y2 = roi_thickness
+        x1 = 0
+        x2 = roi_length
+        gradients.append(self.get_pop_density(org_x, org_y, org_range, x1, y1, x2, y2))
+
+        # LEFT
+        y1 = y2 = roi_thickness
+        x1 = roi_length
+        x2 = 0
+        gradients.append(self.get_pop_density(org_x, org_y, org_range, x1, y1, x2, y2))
+
+        return gradients
 
     """ABOVE: Environment sensory functions for giving info to Organisms"""
 
