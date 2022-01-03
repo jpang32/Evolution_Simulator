@@ -56,7 +56,7 @@ class Environment(tk.Canvas):
     timer = 0
 
     safe_x = [200, 401]  # [x1, x2] safe area
-    safe_y = [0, 401]  # [y1, y2] safe area
+    safe_y = [200, 401]  # [y1, y2] safe area
 
     def __init__(self, root, height, width, frame_rate, num_members=500):
         super().__init__(root, height=height, width=width, bg="white")

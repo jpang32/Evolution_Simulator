@@ -29,7 +29,7 @@ class IncompatibleGenome(Error):
 class Microbe(Organism):
 
     microbe_tag = "microbe"
-    num_genes = 4
+    num_genes = 10
     range = 60
 
     width = 3
