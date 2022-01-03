@@ -70,6 +70,12 @@ class Environment(tk.Canvas):
         self.width = width
         self.height = height
 
+        """ Tkinter Info Box stuff """
+
+        self.info_box = tk.Text(root, width=50)
+        self.info_box.insert('1.0', 'Generation: ')
+        self.info_box.insert('1.12', self.Generation.count)
+
     def add_members(self, members):
         self.generation.add_members(members)
 
@@ -152,6 +158,8 @@ class Environment(tk.Canvas):
             Environment.timer = 0
             self.transition()
             Environment.ticks = 0
+            self.info_box.delete('1.12')
+            self.info_box.insert('1.12', self.Generation.count)
         self.move_organisms()
         after_time = int(1000 / self.frame_rate)
         Environment.ticks += 1
