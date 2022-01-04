@@ -1,0 +1,25 @@
+As of 1/4/2022:
+
+- On change_activation branch, the activation function is now tanh between both layers. However,
+this seems to cause one out of the 4 outputs to continue to be dominant over the other ones.
+For example, microbes that move to the right will survive, and the gene pool gets better at
+reaching the safe zone, but they will continue to only move right in the next generation and
+won't ever move down. Trying to find a way to change it so that their actions are not so
+determinant (maybe by keeping these tanh activations and changing the outputs to a probability?)
+
+Other possible improvements:
+- Make it so that the user can skip over a certain number of generations so that they don't
+have to watch each one play. One problem is that the generations take just as long to run if
+we don't play the visual. (Could this be solved somehow by running things in parallel?)
+- Giving the user the option to pause after every generation, and be able to continue to
+the next by pressing 'k'. This could be done with the above, by allowing users to either press
+k or entering a number (of generations to skip).
+- Making the textbox more detailed
+- Typing everything
+- Adding more types of Organisms
+- Adding more inputs / outputs
+- Fixing the fact that weights which connect input nodes to input nodes are simply ignored
+as of now
+- Add things like food, killing / eating each other, releasing pheromones
+- Making breeding more complex (Adding probability that two Microbes breed, maybe based on
+how much Microbes are compatible (have similar genes? certain characteristics?))
