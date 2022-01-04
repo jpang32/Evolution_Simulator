@@ -1,10 +1,8 @@
 from __future__ import annotations
 import tkinter as tk
-from typing import List
 from organism import Organism
-# from generation import Generation
+from microbe import Microbe
 import random
-
 
 import time
 
@@ -52,9 +50,6 @@ class Environment(tk.Canvas):
     duration = 300  # Number of ticks before next gen
     ticks = 0  # Current number of ticks
 
-    # temp:
-    timer = 0
-
     safe_x = [200, 401]  # [x1, x2] safe area
     safe_y = [200, 401]  # [y1, y2] safe area
 
@@ -71,10 +66,18 @@ class Environment(tk.Canvas):
         self.height = height
 
         """ Tkinter Info Box stuff """
+        # Generation
+        self.info_box = tk.Text(root, height=4, width=50)
+        self.info_box.insert('1.0', f'Generation: {self.Generation.count}\n')
 
-        self.info_box = tk.Text(root, width=50)
-        self.info_box.insert('1.0', 'Generation: ')
-        self.info_box.insert('1.12', self.Generation.count)
+        # Num genes
+        self.info_box.insert('2.0', f'Microbe # of genes: {Microbe.num_genes}\n')
+
+        # Population
+        self.info_box.insert('3.0', f'Population size: {self.Generation.size}\n')
+
+        # Survival Percentage
+        self.info_box.insert('4.0', f'Previous generation survival %:      \n')
 
     def add_members(self, members):
         self.generation.add_members(members)
@@ -151,11 +154,8 @@ class Environment(tk.Canvas):
     """ABOVE: Environment sensory functions for giving info to Organisms"""
 
     def tick(self):
-        start = time.time()
         # if time is up: transition (create new generation)
         if Environment.duration <= Environment.ticks:
-            print('Generation length: ', Environment.timer)
-            Environment.timer = 0
             self.transition()
             Environment.ticks = 0
             self.info_box.delete('1.12')
@@ -163,8 +163,6 @@ class Environment(tk.Canvas):
         self.move_organisms()
         after_time = int(1000 / self.frame_rate)
         Environment.ticks += 1
-        end = time.time()
-        Environment.timer += end - start
         self.after(1, self.tick)
 
     def move_organisms(self):
@@ -172,7 +170,6 @@ class Environment(tk.Canvas):
             # Calculate env data for the organism to think
             pop_density = self.get_pop_density(organism.x, organism.y, type(organism).range)
             env_data = [pop_density]
-
             prev_x = organism.x
             prev_y = organism.y
             organism.move(env_data)
@@ -192,7 +189,6 @@ class Environment(tk.Canvas):
                              Environment.safe_x[1],
                              Environment.safe_y[1])
         area = (self.safe_x[1] - self.safe_x[0]) * (self.safe_y[1] - self.safe_y[0])
-        print('Survivor density: ', len(self.find_withtag('alive')) / area)
         self.dtag('alive', 'dead')
         self.dtag(self.safe_area, 'dead')
         self.delete('dead')
@@ -205,6 +201,9 @@ class Environment(tk.Canvas):
             prev_y = organism.y
             organism.reset()
             self.move(organism.shape, organism.x - prev_x, organism.y - prev_y)
+        survival_percentage = f'{round((len(survivors) / self.Generation.size) * 100, 2)}%'
+        self.info_box.delete('4.end - 5 c', '4.end')
+        self.info_box.insert('4.end', survival_percentage)
         self.dtag('alive', 'alive')
         self.generation = self.Generation.next_gen_from_members_list(survivors, self)
 

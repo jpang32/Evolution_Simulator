@@ -1,15 +1,9 @@
 from __future__ import annotations
 import random
-import typing
-import tkinter as tk
-import numpy as np
-from scipy.special import softmax
 
 from genome import Genome
 from organism import Organism
 from organism import Direction
-
-import time
 
 
 class Error(Exception):

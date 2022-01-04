@@ -2,9 +2,6 @@ from __future__ import annotations
 from typing import Type, TypeVar
 import random
 
-# Delete below after testing
-# from microbe import Microbe
-
 
 class Error(Exception):
 

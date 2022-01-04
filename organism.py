@@ -6,10 +6,7 @@ import math
 from genome import Genome
 from brain import Brain
 
-import numpy as np
 from scipy.sparse import csr_matrix
-
-import time
 
 
 class Direction(Enum):

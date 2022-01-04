@@ -1,11 +1,7 @@
 import tkinter as tk
 
-from organism import Organism
 from microbe import Microbe
-from genome import Genome
 from environment import Environment
-from brain import Brain
-from generation import Generation
 
 
 start_at_gen = 100
